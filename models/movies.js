@@ -26,7 +26,7 @@ const movieSchema = new mongoose.Schema({
   image: {
     type: String,
     required: true,
-    // match: /^https?:\/\/(www\.)?[-\w@:%.+~#=]{1,256}\.[a-z0-9()]{2,}\b([-\w()@:%.+~#=\\?&]*)/i,
+    match: /^https?:\/\/(www\.)?[-\w@:%.+~#=]{1,256}\.[a-z0-9()]{2,}\b([-\w()@:%.+~#=\\?&]*)/i,
   },
   trailerLink: {
     type: String,
@@ -41,7 +41,7 @@ const movieSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'user',
+    ref: 'users',
   },
   movieId: {
     type: Number,
