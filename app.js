@@ -10,6 +10,7 @@ mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
 
 const { requestLogger, errorLogger} = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
+const users = require('./routes/users');
 const NotFoundPage = require('./errors/NotFoundPage');
 
 //перед точками входа
@@ -19,7 +20,7 @@ app.use(requestLogger);
 
 
 //роутеры, которые требуют авторизации
-
+app.use(users);
 
 app.use('*', auth, () => {
   throw new NotFoundPage('Страница не найдена');
@@ -30,13 +31,11 @@ app.use('*', auth, () => {
 app.use(errorLogger);
 app.use(errors());
 app.use((err, req, res, next) => {
-  // если у ошибки нет статуса, выставляем 500
-  const { statusCode = 500, message } = err;
+  const { statusCode = 500, message } = err; // если у ошибки нет статуса, выставляем 500
   res
     .status(statusCode)
     .send({
-      // проверяем статус и выставляем сообщение в зависимости от него
-      message: statusCode === 500
+      message: statusCode === 500  // проверяем статус и выставляем сообщение в зависимости от него
         ? 'На сервере произошла ошибка'
         : message,
     });
