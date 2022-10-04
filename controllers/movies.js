@@ -10,11 +10,24 @@ module.exports.getMovies = (req, res, next) => {
 };
 
 module.exports.createMovie = (req, res, next) => {
-  const { country, director, duration, year, description, image,
-    trailerLink, thumbnail, movieId, nameRU, nameEN } = req.body;
-  Movie.create({ country, director, duration, year, description, image,
+  const {
+    country, director, duration, year, description, image,
     trailerLink, thumbnail, movieId, nameRU, nameEN,
-    owner: req.user._id })
+  } = req.body;
+  Movie.create({
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    movieId,
+    nameRU,
+    nameEN,
+    owner: req.user._id,
+  })
     .then((movie) => res.send({ movie }))
     .catch((err) => {
       if (err.name === 'Validation') {

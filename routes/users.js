@@ -9,7 +9,7 @@ router.patch('/users/me', auth, celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required,
     email: Joi.string().email().required,
-}),
+  }),
 }), updateUser);
 
 module.exports = router;

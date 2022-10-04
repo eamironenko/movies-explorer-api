@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const uniqueValidator = require('mongoose-unique-validator');
+const AuthErr = require('../errors/AuthErr');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -21,9 +22,9 @@ const userSchema = new mongoose.Schema({
     required: [true, 'обязательное поле для заполнения'],
     select: false,
   },
-})
+});
 
-/*userSchema.statics.findUserByCredentials = function (email, password) {
+userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
@@ -37,7 +38,7 @@ const userSchema = new mongoose.Schema({
           return user;
         });
     });
-};*/
+};
 
 userSchema.plugin(uniqueValidator);
 module.exports = mongoose.model('user', userSchema);

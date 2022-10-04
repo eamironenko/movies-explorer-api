@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-
 const movieSchema = new mongoose.Schema({
   country: {
     type: String,
@@ -10,7 +9,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  duration: { //длительность фильма
+  duration: { // длительность фильма
     type: Number,
     required: true,
   },
@@ -55,6 +54,6 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-})
+});
 
-module.exports = mongoose.model('user', movieSchema);
+module.exports = mongoose.model('movie', movieSchema);

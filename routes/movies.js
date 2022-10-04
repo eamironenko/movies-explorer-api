@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
-const {isValidObjectId} = require('mongoose');
+const { isValidObjectId } = require('mongoose');
 const auth = require('../middlewares/auth');
 const {
-  getMovies, createMovie, deleteMovie
+  getMovies, createMovie, deleteMovie,
 } = require('../controllers/movies');
 const Validation = require('../errors/Validation');
 
@@ -43,8 +43,8 @@ router.post('/movies/', auth, celebrate({
 
 router.delete('/movies/:id', auth, celebrate({
   params: Joi.object().keys({
-    id: Joi.string().custom(idErr, 'custom validation')
-  })
+    id: Joi.string().custom(idErr, 'custom validation'),
+  }),
 }), deleteMovie);
 
 module.exports = router;

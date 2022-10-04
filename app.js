@@ -1,33 +1,64 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const { celebrate, Joi, errors } = require('celebrate');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
-const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-const { PORT = 3000 } = process.env;
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
-
-const { requestLogger, errorLogger} = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
 const users = require('./routes/users');
+const movies = require('./routes/movies');
+const { login, createUser } = require('./controllers/users');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundPage = require('./errors/NotFoundPage');
 
-//перед точками входа
+const options = {
+  origin: [
+    'http://localhost:3000',
+    'https://mironenko.students.nomoredomains.sbs',
+  ],
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
+  credentials: true,
+};
+
+const app = express();
+app.use('*', cors(options));
+const { PORT = 3000 } = process.env;
+mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// перед точками входа
 app.use(requestLogger);
 
-//роутеры, которые не требуют авторизации
+// роутеры, которые не требуют авторизации
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), login);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+    name: Joi.string().min(2).max(30).required(),
+  }),
+}), createUser);
 
-
-//роутеры, которые требуют авторизации
+// роутеры, которые требуют авторизации
 app.use(users);
-
+app.use(movies);
 app.use('*', auth, () => {
   throw new NotFoundPage('Страница не найдена');
 });
 
-
-//логгер ошибок
+// блок ошибок
 app.use(errorLogger);
 app.use(errors());
 app.use((err, req, res, next) => {
@@ -35,7 +66,7 @@ app.use((err, req, res, next) => {
   res
     .status(statusCode)
     .send({
-      message: statusCode === 500  // проверяем статус и выставляем сообщение в зависимости от него
+      message: statusCode === 500 // проверяем статус и выставляем сообщение в зависимости от него
         ? 'На сервере произошла ошибка'
         : message,
     });
