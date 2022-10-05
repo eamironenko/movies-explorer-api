@@ -16,7 +16,7 @@ const NotFoundPage = require('./errors/NotFoundPage');
 const options = {
   origin: [
     'http://localhost:3000',
-    'https://mironenko.students.nomoredomains.sbs',
+    'https://api.mironenko.diploma.nomoredomains.icu',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,

@@ -17,8 +17,8 @@ const linkErr = (value) => {
 };
 
 const idErr = (value) => {
-  if (isValidObjectId(value)) {
-    throw new Validation('Некорректные данные');
+  if (!isValidObjectId(value)) {
+    throw new Validation('Переданы некорректные данные');
   } else {
     return value;
   }
