@@ -1,4 +1,4 @@
-module.exports.serverErr = ((err, req, res, next) => {
+const serverErr = ((err, req, res, next) => {
   const { statusCode = 500, message } = err; // если у ошибки нет статуса, выставляем 500
   res
     .status(statusCode)
@@ -9,3 +9,5 @@ module.exports.serverErr = ((err, req, res, next) => {
     });
   next();
 });
+
+module.exports = serverErr;

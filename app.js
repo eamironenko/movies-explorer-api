@@ -1,17 +1,17 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const { errors } = require('celebrate');
 const cors = require('cors');
 const helmet = require('helmet');
 
 const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const serverErr = require('./middlewares/serverErr');
-const { MONGO_URL } = require('./utils/secretKey');
 const limiter = require('./middlewares/limiter');
+const { MONGO_URL } = require('./utils/secretKey');
 
 const options = {
   origin: [
@@ -38,6 +38,7 @@ app.use(requestLogger);
 app.use(helmet());
 app.use(limiter);
 app.use(router);
+
 app.use(errorLogger);
 app.use(errors());
 app.use(serverErr);

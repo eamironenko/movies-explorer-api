@@ -1,20 +1,19 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
+const { JWT_SECRET } = require('../utils/secretKey');
+
 const Validation = require('../errors/Validation');
 const NotFoundPage = require('../errors/NotFoundPage');
 const ConflictErr = require('../errors/ConflictErr');
-
-const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      // const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        JWT_SECRET,
         { expiresIn: '8d' },
       );
       res.send({ token });
@@ -54,7 +53,7 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'Validation') {
         next(new Validation('Переды некорректные данные пользователя'));
-      } else if (err.message.includes('unique')) {
+      } else if (err.code === 11000) {
         next(new ConflictErr('Пользователь с таким email уже существует'));
       } else {
         next(err);
