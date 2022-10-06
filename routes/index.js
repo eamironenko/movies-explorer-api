@@ -9,6 +9,7 @@ const NotFoundPage = require('../errors/NotFoundPage');
 router.use(auth);
 router.post('/signin', validateSignIn, login);
 router.post('/signup', validateSignUp, createUser);
+
 router.use(users);
 router.use(movies);
 router.use((req, res, next) => {

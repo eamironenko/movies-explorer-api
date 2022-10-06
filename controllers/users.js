@@ -30,12 +30,7 @@ module.exports.getUserId = (req, res, next) => {
         throw new NotFoundPage('Пользователь не найден');
       }
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        return next(new Validation('Переданы некорректные данные'));
-      }
-      return next(err);
-    });
+    .catch(next);
 };
 
 module.exports.createUser = (req, res, next) => {
