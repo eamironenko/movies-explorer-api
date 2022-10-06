@@ -9,6 +9,7 @@ const cors = require('cors');
 const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const serverErr = require('./middlewares/serverErr');
+const { MONGO_URL } = require('./utils/secretKey');
 
 const options = {
   origin: [
@@ -23,9 +24,9 @@ const options = {
 };
 
 const app = express();
-app.use('*', cors(options));
 const { PORT = 3000 } = process.env;
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
+mongoose.connect(MONGO_URL);
+app.use('*', cors(options));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
